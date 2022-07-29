@@ -9,60 +9,188 @@
 package rnokpp
 
 import (
+	cryptoRand "crypto/rand"
+	"encoding/binary"
 	"fmt"
+	mathRand "math/rand"
+	"strconv"
 	"time"
 )
 
-type Gender string
-
-const Male Gender = Gender("male")
-const Female Gender = Gender("female")
+func init() {
+	var b [8]byte
+	_, err := cryptoRand.Read(b[:])
+	if err != nil {
+		panic("cannot seed math/rand package with cryptographically secure random number generator")
+	}
+	mathRand.Seed(int64(binary.LittleEndian.Uint64(b[:])))
+}
 
 var BaseLocation, _ = time.LoadLocation("Europe/Kiev")
 var BaseDate = time.Date(1899, 12, 31, 0, 0, 0, 0, BaseLocation)
 
-type Details struct {
-	Valid    bool
-	Gender   Gender
-	Birthday time.Time
+// var BaseDate2, _ = time.Parse("2006-01-02", "1899-12-31")
+
+func NewDetails(valid bool, gender Gender, date string) *Details {
+	birthday, err := time.Parse("02.01.2006", date)
+	if err != nil {
+		panic(err)
+	}
+
+	return &Details{valid, gender, birthday}
 }
 
-func IsValid(rnokpp string) bool {
-	return true
-}
+// GetDetails returns details about RNOKPP if possible
+func GetDetails(rnokpp string) (*Details, error) {
+	pRnokpp, err := parseRnokpp(rnokpp)
 
-func GetDetails(rnokpp [10]int) (*Details, error) {
-	birthdayDigit1 := rnokpp[0] * -1
-	birthdayDigit2 := rnokpp[1] * 5
-	birthdayDigit3 := rnokpp[2] * 7
-	birthdayDigit4 := rnokpp[3] * 9
-	birthdayDigit5 := rnokpp[4] * 4
-	accountCardDigit1 := rnokpp[5] * 6
-	accountCardDigit2 := rnokpp[6] * 10
-	accountCardDigit3 := rnokpp[7] * 5
-	genderDigit := rnokpp[8] * 7
-	controlDigit := rnokpp[9]
+	if err != nil {
+		return nil, err
+	}
 
-	checksum := birthdayDigit1 + birthdayDigit2 + birthdayDigit3 + birthdayDigit4 + birthdayDigit5 + accountCardDigit1 + accountCardDigit2 + accountCardDigit3 + genderDigit
-	calculatedControlDigit := (checksum % 11) % 10
+	genderDigit := pRnokpp[8]  // gender digit
+	controlDigit := pRnokpp[9] // control digit
+
+	digits := [9]int{pRnokpp[0], pRnokpp[1], pRnokpp[2], pRnokpp[3], pRnokpp[4], pRnokpp[5], pRnokpp[6], pRnokpp[7], pRnokpp[8]}
+	calculatedControlDigit := calculateControlDigit(digits)
 
 	if controlDigit != calculatedControlDigit {
 		return nil, fmt.Errorf("invalid")
 	}
 
-	details := Details{
-		Valid:    true,
-		Gender:   Male,
-		Birthday: time.Date(),
+	var gender = Unknown
+
+	if genderDigit%2 == 0 {
+		gender = Female
+	} else {
+		gender = Male
 	}
 
-	return nil
+	numberOfDaysSinceBaseDate := pRnokpp[0]*10000 + pRnokpp[1]*1000 + pRnokpp[2]*100 + pRnokpp[3]*10 + pRnokpp[4]*1
+
+	details := Details{
+		Valid:    true,
+		Gender:   gender,
+		Birthday: BaseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
+	}
+
+	return &details, nil
 }
 
-func RandomRnokpp() [10]int {
+func parseRnokpp(rnokpp string) (result [10]int, err error) {
+	var empty [10]int
 
+	if len(rnokpp) > 10 {
+		return empty, fmt.Errorf("more than 10 digits")
+	}
+
+	for i := 0; i < len(rnokpp); i++ {
+		result[i], err = strconv.Atoi(string(rnokpp[i]))
+
+		if err != nil {
+			return empty, fmt.Errorf("string does not consist of digits")
+		}
+	}
+
+	return result, nil
 }
 
-func RandomRnokppS() string {
+// IsValid checks if RNOKPP is valid
+func IsValid(rnokpp string) bool {
+	details, err := GetDetails(rnokpp)
 
+	if err != nil {
+		return false
+	}
+
+	return details.Valid
+}
+
+// IsMale checks if RNOKPP belongs to the male gender
+func IsMale(rnokpp string) (bool, error) {
+	details, err := GetDetails(rnokpp)
+
+	if err != nil {
+		return false, err
+	}
+
+	return details.Gender.IsMale(), nil
+}
+
+// IsFemale checks if RNOKPP belongs to the female gender
+func IsFemale(rnokpp string) (bool, error) {
+	details, err := GetDetails(rnokpp)
+
+	if err != nil {
+		return false, err
+	}
+
+	return details.Gender.IsFemale(), nil
+}
+
+// GetGender gets gender from RNOKPP
+func GetGender(rnokpp string) (Gender, error) {
+	details, err := GetDetails(rnokpp)
+
+	if err != nil {
+		return Unknown, err
+	}
+
+	return details.Gender, nil
+}
+
+// func RandomRnokpp() string {
+// }
+//
+// func RandomRnokppN(count int) (result []string) {
+// 	for i := 0; i < count; i++ {
+// 		result = append(result, RandomRnokpp())
+// 	}
+//
+// 	return
+// }
+
+var maleDigits = [5]int{1, 3, 5, 7, 9}
+var femaleDigits = [5]int{0, 2, 4, 6, 8}
+
+// GenerateRnokpp generates RNOKPP by date and gender
+func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
+	diff := date.Sub(BaseDate)
+	numberOfDays := int(diff.Hours() / 24)
+	rnokpp = fmt.Sprintf("%05d", numberOfDays)
+
+	// three random account number digits
+	rnokpp += strconv.Itoa(mathRand.Intn(9))
+	rnokpp += strconv.Itoa(mathRand.Intn(9))
+	rnokpp += strconv.Itoa(mathRand.Intn(9))
+
+	if gender == Male {
+		rnokpp += strconv.Itoa(maleDigits[mathRand.Intn(4)])
+	} else {
+		rnokpp += strconv.Itoa(femaleDigits[mathRand.Intn(4)])
+	}
+
+	var digits [9]int
+	for i := 0; i < len(rnokpp); i++ {
+		digits[i], _ = strconv.Atoi(string(rnokpp[i]))
+	}
+
+	rnokpp += strconv.Itoa(calculateControlDigit(digits))
+
+	return
+}
+
+// calculateControlDigit calculates 10th (control digit) from the first 9 digits
+func calculateControlDigit(rnokpp [9]int) int {
+	checksum := rnokpp[0] * -1
+	checksum += rnokpp[1] * 5
+	checksum += rnokpp[2] * 7
+	checksum += rnokpp[3] * 9
+	checksum += rnokpp[4] * 4
+	checksum += rnokpp[5] * 6
+	checksum += rnokpp[6] * 10
+	checksum += rnokpp[7] * 5
+	checksum += rnokpp[8] * 7
+
+	return (checksum % 11) % 10
 }
