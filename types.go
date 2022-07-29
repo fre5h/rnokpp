@@ -42,10 +42,9 @@ func NewDetails(valid bool, gender Gender, date string) *Details {
 }
 
 func (d Details) String() string {
-	v := "valid"
 	if !d.Valid {
-		v = "invalid"
+		return "invalid"
 	}
 
-	return fmt.Sprintf("%s, %s, %s", v, d.Gender, d.Birthday.Format("02.01.2006"))
+	return fmt.Sprintf("valid, %s, %s", d.Gender, d.Birthday.Format("02.01.2006"))
 }
