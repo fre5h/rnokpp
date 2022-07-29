@@ -23,10 +23,22 @@ func (g Gender) String() string {
 	return string(g)
 }
 
+var BaseLocation, _ = time.LoadLocation("Europe/Kiev")
+var BaseDate = time.Date(1899, 12, 31, 0, 0, 0, 0, BaseLocation)
+
 type Details struct {
 	Valid    bool
 	Gender   Gender
 	Birthday time.Time
+}
+
+func NewDetails(valid bool, gender Gender, date string) *Details {
+	birthday, err := time.ParseInLocation("02.01.2006", date, BaseLocation)
+	if err != nil {
+		panic(err)
+	}
+
+	return &Details{valid, gender, birthday}
 }
 
 func (d Details) String() string {

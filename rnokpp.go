@@ -28,20 +28,6 @@ func init() {
 	mathRand.Seed(int64(binary.LittleEndian.Uint64(b[:])))
 }
 
-var BaseLocation, _ = time.LoadLocation("Europe/Kiev")
-var BaseDate = time.Date(1899, 12, 31, 0, 0, 0, 0, BaseLocation)
-
-// var BaseDate2, _ = time.Parse("2006-01-02", "1899-12-31")
-
-func NewDetails(valid bool, gender Gender, date string) *Details {
-	birthday, err := time.Parse("02.01.2006", date)
-	if err != nil {
-		panic(err)
-	}
-
-	return &Details{valid, gender, birthday}
-}
-
 // GetDetails returns details about RNOKPP if possible
 func GetDetails(rnokpp string) (*Details, error) {
 	pRnokpp, err := parseRnokpp(rnokpp)
@@ -60,7 +46,7 @@ func GetDetails(rnokpp string) (*Details, error) {
 		return nil, fmt.Errorf("invalid")
 	}
 
-	var gender = Unknown
+	var gender Gender
 
 	if genderDigit%2 == 0 {
 		gender = Female
