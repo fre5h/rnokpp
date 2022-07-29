@@ -61,7 +61,7 @@ func TestDetailsString(t *testing.T) {
 	for _, data := range testVariantsTestDetailsString {
 		if data.string != data.details.String() {
 			t.Errorf(
-				"invalid string represenation of details, expected: %s%s%s, actual: %s%s%s.",
+				"invalid string representation of details, expected: %s%s%s, actual: %s%s%s.",
 				green, data.string, reset,
 				red, data.details.String(), reset,
 			)

@@ -13,30 +13,34 @@ import (
 // const green = "\033[32m"
 // const yellow = "\033[33m"
 
-var testVariants = []struct {
-	rnokpp  string
-	details rnokpp.Details
+var testVariantsForTestGetDetails = []struct {
+	rnokpp string
+	valid  bool
+	gender rnokpp.Gender
+	date   string
 }{
 	{
-		rnokpp:  "3652504575",
-		details: *rnokpp.NewDetails(true, rnokpp.Male, "01.01.2000"),
+		rnokpp: "3652504575",
+		valid:  true,
+		gender: rnokpp.Male,
+		date:   "01.01.2000",
 	},
 }
 
 func TestGetDetails(t *testing.T) {
-	for _, data := range testVariants {
+	for _, data := range testVariantsForTestGetDetails {
 		result, _ := rnokpp.GetDetails(data.rnokpp)
 
-		if result.Valid != data.details.Valid {
-			t.Error("invalid", result.Valid, data.details.Valid)
+		if result.Valid != data.valid {
+			t.Error("invalid", result.Valid, data.valid)
 		}
 
-		if result.Gender != data.details.Gender {
-			t.Error("mismatch gender", result.Gender, data.details.Gender)
+		if result.Gender != data.gender {
+			t.Error("different gender", result.Gender, data.gender)
 		}
 
-		if result.Birthday.Format("02.01.2006") != data.details.Birthday.Format("02.01.2006") {
-			t.Error("mismatch birthday", result.Birthday.Format("02.01.2006"), data.details.Birthday.Format("02.01.2006"))
+		if result.Birthday.Format("02.01.2006") != data.date {
+			t.Error("different birthday", result.Birthday.Format("02.01.2006"), data.date)
 		}
 	}
 }
@@ -62,15 +66,19 @@ func ExampleGetGender() {
 }
 
 func ExampleIsMale() {
-	result, _ := rnokpp.IsMale("3652504575")
-	fmt.Print(result)
+	result, err := rnokpp.IsMale("3652504575")
+	if err == nil {
+		fmt.Print(result)
+	}
 	// Output:
 	// true
 }
 
 func ExampleIsFemale() {
-	result, _ := rnokpp.IsFemale("3652504575")
-	fmt.Print(result)
+	result, err := rnokpp.IsFemale("3652504575")
+	if err == nil {
+		fmt.Print(result)
+	}
 	// Output:
 	// false
 }
@@ -82,4 +90,14 @@ func TestGenerateRnokpp(t *testing.T) {
 	if !rnokpp.IsValid(generatedRnokpp) {
 		t.Error("generated RNOKPP is not valid", generatedRnokpp)
 	}
+}
+
+func ExampleGenerateRnokpp() {
+	birthday, _ := time.Parse("02.01.2006", "01.01.2000")
+	generatedRnokppMale := rnokpp.GenerateRnokpp(birthday, rnokpp.Male)     // string with valid random RNOKPP
+	generatedRnokppFemale := rnokpp.GenerateRnokpp(birthday, rnokpp.Female) // string with valid random RNOKPP
+
+	fmt.Print(rnokpp.IsValid(generatedRnokppMale), rnokpp.IsValid(generatedRnokppFemale))
+	// Output:
+	// true true
 }

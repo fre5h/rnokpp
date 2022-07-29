@@ -4,10 +4,7 @@
     З моменту впровадження державного реєстру фізичних осіб України у 1994 році мав назву «індивідуальний ідентифікаційний номер».
     З 2012 року набув чинності Податковий кодекс України, у якому використовується термін реєстраційний номер облікової картки платника податків (РНОКПП)
     — як десятизначний номер з Державного реєстру фізичних осіб — платників податків.
-
-    https://uk.wikipedia.org/wiki/%D0%A0%D0%B5%D1%94%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D0%B9%D0%BD%D0%B8%D0%B9_%D0%BD%D0%BE%D0%BC%D0%B5%D1%80_%D0%BE%D0%B1%D0%BB%D1%96%D0%BA%D0%BE%D0%B2%D0%BE%D1%97_%D0%BA%D0%B0%D1%80%D1%82%D0%BA%D0%B8_%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%B8%D0%BA%D0%B0_%D0%BF%D0%BE%D0%B4%D0%B0%D1%82%D0%BA%D1%96%D0%B2
 */
-
 package rnokpp
 
 import (
@@ -25,6 +22,7 @@ func init() {
 	if err != nil {
 		panic("cannot seed math/rand package with cryptographically secure random number generator")
 	}
+
 	mathRand.Seed(int64(binary.LittleEndian.Uint64(b[:])))
 }
 
@@ -63,24 +61,6 @@ func GetDetails(rnokpp string) (*Details, error) {
 	}
 
 	return &details, nil
-}
-
-func parseRnokpp(rnokpp string) (result [10]int, err error) {
-	var empty [10]int
-
-	if len(rnokpp) > 10 {
-		return empty, fmt.Errorf("more than 10 digits")
-	}
-
-	for i := 0; i < len(rnokpp); i++ {
-		result[i], err = strconv.Atoi(string(rnokpp[i]))
-
-		if err != nil {
-			return empty, fmt.Errorf("string does not consist of digits")
-		}
-	}
-
-	return result, nil
 }
 
 // IsValid checks if RNOKPP is valid
@@ -127,17 +107,6 @@ func GetGender(rnokpp string) (Gender, error) {
 	return details.Gender, nil
 }
 
-// func RandomRnokpp() string {
-// }
-//
-// func RandomRnokppN(count int) (result []string) {
-// 	for i := 0; i < count; i++ {
-// 		result = append(result, RandomRnokpp())
-// 	}
-//
-// 	return
-// }
-
 var maleDigits = [5]int{1, 3, 5, 7, 9}
 var femaleDigits = [5]int{0, 2, 4, 6, 8}
 
@@ -166,6 +135,36 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
 	rnokpp += strconv.Itoa(calculateControlDigit(digits))
 
 	return
+}
+
+// func RandomRnokpp() string {
+// }
+//
+// func RandomRnokppN(count int) (result []string) {
+// 	for i := 0; i < count; i++ {
+// 		result = append(result, RandomRnokpp())
+// 	}
+//
+// 	return
+// }
+
+// parseRnokpp parses RNKOPP from string into array of ints
+func parseRnokpp(rnokpp string) (result [10]int, err error) {
+	var empty [10]int
+
+	if len(rnokpp) > 10 {
+		return empty, fmt.Errorf("more than 10 digits")
+	}
+
+	for i := 0; i < len(rnokpp); i++ {
+		result[i], err = strconv.Atoi(string(rnokpp[i]))
+
+		if err != nil {
+			return empty, fmt.Errorf("string does not consist of digits")
+		}
+	}
+
+	return result, nil
 }
 
 // calculateControlDigit calculates 10th (control digit) from the first 9 digits
