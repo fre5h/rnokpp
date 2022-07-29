@@ -13,8 +13,8 @@ const green = "\033[32m"
 
 func TestNewDetails(t *testing.T) {
 	details := rnokpp.NewDetails(true, rnokpp.Male, "01.01.2000")
-
-	expectedDate, _ := time.ParseInLocation("02.01.2006", "01.01.2000", rnokpp.BaseLocation)
+	baseLocation, _ := time.LoadLocation("Europe/Kiev")
+	expectedDate, _ := time.ParseInLocation("02.01.2006", "01.01.2000", baseLocation)
 
 	if details.Birthday.Unix() != expectedDate.Unix() {
 		t.Errorf(

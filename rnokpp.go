@@ -1,10 +1,8 @@
-/*
-	Допоміжні функції для роботи з РНОКПП (Реєстраційний номер облікової картки платника податків).
-
-    З моменту впровадження державного реєстру фізичних осіб України у 1994 році мав назву «індивідуальний ідентифікаційний номер».
-    З 2012 року набув чинності Податковий кодекс України, у якому використовується термін реєстраційний номер облікової картки платника податків (РНОКПП)
-    — як десятизначний номер з Державного реєстру фізичних осіб — платників податків.
-*/
+// Допоміжні функції для роботи з РНОКПП (Реєстраційний номер облікової картки платника податків).
+//
+// З моменту впровадження державного реєстру фізичних осіб України у 1994 році мав назву «індивідуальний ідентифікаційний номер».
+// З 2012 року набув чинності Податковий кодекс України, у якому використовується термін реєстраційний номер облікової картки платника податків (РНОКПП)
+// — як десятизначний номер з Державного реєстру фізичних осіб — платників податків.
 package rnokpp
 
 import (
@@ -57,7 +55,7 @@ func GetDetails(rnokpp string) (*Details, error) {
 	details := Details{
 		Valid:    true,
 		Gender:   gender,
-		Birthday: BaseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
+		Birthday: baseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
 	}
 
 	return &details, nil
@@ -112,7 +110,7 @@ var femaleDigits = [5]int{0, 2, 4, 6, 8}
 
 // GenerateRnokpp generates RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
-	diff := date.Sub(BaseDate)
+	diff := date.Sub(baseDate)
 	numberOfDays := int(diff.Hours() / 24)
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
 
