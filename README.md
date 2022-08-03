@@ -21,7 +21,7 @@ Helper functions to work with Ukrainian registration number of the taxpayer's ac
 - [x] Check gender
 - [x] Check validity
 - [x] Generate RNOKPP by date and gender
-- [] Generate random RNOKPP
+- [ ] Generate random RNOKPP
 
 ## Using 👨‍🎓
 
