@@ -52,11 +52,12 @@ func GetDetails(rnokpp string) (*Details, error) {
 	}
 
 	numberOfDaysSinceBaseDate := pRnokpp[0]*10000 + pRnokpp[1]*1000 + pRnokpp[2]*100 + pRnokpp[3]*10 + pRnokpp[4]*1
+	numberOfDaysSinceBaseDate--
 
 	details := Details{
 		Valid:    true,
 		Gender:   gender,
-		Birthday: baseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
+		Birthday: BaseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
 	}
 
 	return &details, nil
@@ -96,24 +97,36 @@ func IsFemale(rnokpp string) (bool, error) {
 }
 
 // GetGender gets gender from RNOKPP
-func GetGender(rnokpp string) (Gender, error) {
+func GetGender(rnokpp string) (*Gender, error) {
 	details, err := GetDetails(rnokpp)
 
 	if err != nil {
-		return Unknown, err
+		return nil, err
 	}
 
-	return details.Gender, nil
+	return &details.Gender, nil
 }
 
 var maleDigits = [5]int{1, 3, 5, 7, 9}
 var femaleDigits = [5]int{0, 2, 4, 6, 8}
 
 // GenerateRnokpp generates valid RNOKPP by date and gender
-func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
-	// @todo Validate that date is not less than 01.01.1900
-	diff := date.Sub(baseDate)
+func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
+	if date.Before(BaseDate) {
+		err = fmt.Errorf("the allowed dates start from 01.01.1900, but your date is %s", date.Format("02.04.2006"))
+
+		return
+	}
+
+	if date.After(time.Now()) {
+		err = fmt.Errorf("it is allowed to use only dates in past or current date, but your date is %s", date.Format("02.04.2006"))
+
+		return
+	}
+
+	diff := date.Sub(BaseDate)
 	numberOfDays := int(diff.Hours() / 24)
+	numberOfDays--
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
 
 	// three random account number digits

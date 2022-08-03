@@ -14,21 +14,21 @@ const red = "\033[31m"
 const green = "\033[32m"
 const yellow = "\033[33m"
 
-var testVariantsForTestGetDetails = []struct {
-	rnokpp string
-	valid  bool
-	gender rnokpp.Gender
-	date   string
-}{
-	{
-		rnokpp: "3652504575",
-		valid:  true,
-		gender: rnokpp.Male,
-		date:   "01.01.2000",
-	},
-}
-
 func TestGetDetails(t *testing.T) {
+	var testVariantsForTestGetDetails = []struct {
+		rnokpp string
+		valid  bool
+		gender rnokpp.Gender
+		date   string
+	}{
+		{
+			rnokpp: "3652504575",
+			valid:  true,
+			gender: rnokpp.Male,
+			date:   "01.01.2000",
+		},
+	}
+
 	for _, testVariant := range testVariantsForTestGetDetails {
 		result, _ := rnokpp.GetDetails(testVariant.rnokpp)
 
@@ -52,18 +52,12 @@ func TestIsMale(t *testing.T) {
 
 	isMale, err = rnokpp.IsMale("3652504575") // male RNOKPP
 	if isMale == false || err != nil {
-		t.Errorf(
-			"RNOKPP %s%s%s expected to be a valid for male, but it is not",
-			yellow, "3652504575", reset,
-		)
+		t.Errorf("RNOKPP %s%s%s expected to be a valid for male, but it is not", yellow, "3652504575", reset)
 	}
 
 	isMale, err = rnokpp.IsMale("3068208400") // female RNOKPP
 	if isMale == true || err != nil {
-		t.Errorf(
-			"RNOKPP %s%s%s expected to be a invalid for male, but it is not",
-			yellow, "3068208400", reset,
-		)
+		t.Errorf("RNOKPP %s%s%s expected to be a invalid for male, but it is not", yellow, "3068208400", reset)
 	}
 
 	_, err = rnokpp.IsMale("invalid") // invalid RNOKPP
@@ -78,18 +72,12 @@ func TestIsFemale(t *testing.T) {
 
 	isFemale, err = rnokpp.IsFemale("3652504575") // male RNOKPP
 	if isFemale == true || err != nil {
-		t.Errorf(
-			"RNOKPP %s%s%s expected to be a valid for female, but it is not",
-			yellow, "3652504575", reset,
-		)
+		t.Errorf("RNOKPP %s%s%s expected to be a valid for female, but it is not", yellow, "3652504575", reset)
 	}
 
 	isFemale, err = rnokpp.IsFemale("3068208400") // female RNOKPP
 	if isFemale == false || err != nil {
-		t.Errorf(
-			"RNOKPP %s%s%s expected to be a invalid for female, but it is not",
-			yellow, "3068208400", reset,
-		)
+		t.Errorf("RNOKPP %s%s%s expected to be a invalid for female, but it is not", yellow, "3068208400", reset)
 	}
 
 	_, err = rnokpp.IsFemale("invalid") // invalid RNOKPP
@@ -99,15 +87,11 @@ func TestIsFemale(t *testing.T) {
 }
 
 func TestGetDetailsWithErrors(t *testing.T) {
-	var err error
-
-	_, err = rnokpp.GetDetails("1234567890+")
-	if err == nil || err.Error() != "more than 10 digits, expects exactly 10 digits" {
+	if _, err := rnokpp.GetDetails("1234567890+"); err == nil {
 		t.Error("Expected error for a string longer than 10 symbols")
 	}
 
-	_, err = rnokpp.GetDetails("123456789")
-	if err == nil || err.Error() != "less than 10 digits, expects exactly 10 digits" {
+	if _, err := rnokpp.GetDetails("123456789"); err == nil {
 		t.Error("Expected error for a string smaller than 10 symbols")
 	}
 
@@ -120,18 +104,40 @@ func TestGetDetailsWithErrors(t *testing.T) {
 	}
 
 	for _, invalidRnokpp := range testVariantsForTestGetDetailsForNonDigitsInString {
-		_, err := rnokpp.GetDetails(invalidRnokpp)
-		if err == nil || err.Error() != "string does not consist of digits" {
-			t.Error("Expected error for non digits in invalidRnokpp")
+		if _, err := rnokpp.GetDetails(invalidRnokpp); err == nil {
+			t.Error("Expected error for non digits in string")
 		}
 	}
 }
 
+func TestGetGender(t *testing.T) {
+	result1, _ := rnokpp.GetGender("3652504575")
+	fmt.Println(result1)
+
+	result2, _ := rnokpp.GetGender("3068208400")
+	fmt.Println(result2)
+
+	result3, err := rnokpp.GetGender("invalid")
+	if result3 != nil || err == nil {
+		t.Error("Expected error invalid RNOKPP")
+	}
+}
+
 func TestGenerateRnokpp(t *testing.T) {
+	oldDate, _ := time.Parse("02.04.2006", "31.12.1899")
+	if _, err := rnokpp.GenerateRnokpp(oldDate, rnokpp.Male); err == nil {
+		t.Error("Expected error for too old date")
+	}
+
+	tomorrow := time.Now().AddDate(0, 0, 1)
+	if _, err := rnokpp.GenerateRnokpp(tomorrow, rnokpp.Male); err == nil {
+		t.Error("Expected error for too old date")
+	}
+
 	for i := 0; i < 100; i++ {
 		randomTime := rand.Int63n(time.Now().Unix()-94608000) + 94608000
 		birthday := time.Unix(randomTime, 0)
-		generatedRnokpp := rnokpp.GenerateRnokpp(birthday, rnokpp.Male)
+		generatedRnokpp, _ := rnokpp.GenerateRnokpp(birthday, rnokpp.Male)
 
 		if !rnokpp.IsValid(generatedRnokpp) {
 			t.Errorf(
@@ -144,6 +150,7 @@ func TestGenerateRnokpp(t *testing.T) {
 
 func ExampleIsValid() {
 	fmt.Print(rnokpp.IsValid("3652504575"), rnokpp.IsValid("1234567890"))
+
 	// Output:
 	// true false
 }
@@ -151,15 +158,21 @@ func ExampleIsValid() {
 func ExampleGetDetails() {
 	details, _ := rnokpp.GetDetails("3652504575")
 	fmt.Print(details)
+
 	// Output:
 	// valid, male, 01.01.2000
 }
 
 func ExampleGetGender() {
-	result, _ := rnokpp.GetGender("3652504575")
-	fmt.Print(result)
+	result1, _ := rnokpp.GetGender("3652504575")
+	fmt.Println(result1)
+
+	result2, _ := rnokpp.GetGender("3068208400")
+	fmt.Println(result2)
+
 	// Output:
 	// male
+	// female
 }
 
 func ExampleIsMale() {
@@ -196,10 +209,18 @@ func ExampleIsFemale() {
 
 func ExampleGenerateRnokpp() {
 	birthday, _ := time.Parse("02.01.2006", "01.01.2000")
-	generatedRnokppMale := rnokpp.GenerateRnokpp(birthday, rnokpp.Male)     // string with valid random RNOKPP for male
-	generatedRnokppFemale := rnokpp.GenerateRnokpp(birthday, rnokpp.Female) // string with valid random RNOKPP for female
 
-	fmt.Print(rnokpp.IsValid(generatedRnokppMale), rnokpp.IsValid(generatedRnokppFemale))
+	// string with valid random RNOKPP for male
+	if generatedRnokppMale, err := rnokpp.GenerateRnokpp(birthday, rnokpp.Male); err == nil {
+		fmt.Println(rnokpp.IsValid(generatedRnokppMale))
+	}
+
+	// string with valid random RNOKPP for female
+	if generatedRnokppFemale, err := rnokpp.GenerateRnokpp(birthday, rnokpp.Female); err == nil {
+		fmt.Println(rnokpp.IsValid(generatedRnokppFemale))
+	}
+
 	// Output:
-	// true true
+	// true
+	// true
 }

@@ -10,7 +10,6 @@ type Gender string
 
 const Male = Gender("male")
 const Female = Gender("female")
-const Unknown = Gender("unknown")
 
 // IsMale checks if gender is male
 func (g Gender) IsMale() bool {
@@ -28,7 +27,7 @@ func (g Gender) String() string {
 }
 
 var baseLocation, _ = time.LoadLocation("Europe/Kiev")
-var baseDate = time.Date(1899, 12, 31, 0, 0, 0, 0, baseLocation)
+var BaseDate = time.Date(1900, 1, 1, 0, 0, 0, 0, baseLocation)
 
 // Details is a struct representing details of RNOKPP
 type Details struct {
