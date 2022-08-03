@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Gender is a string type representing a gender (male/female
+// Gender is a string type representing a gender (male/female)
 type Gender string
 
 const Male = Gender("male")

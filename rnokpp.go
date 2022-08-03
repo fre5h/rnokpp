@@ -1,4 +1,4 @@
-// Допоміжні функції для роботи з РНОКПП (Реєстраційний номер облікової картки платника податків).
+// Package rnokpp реалізує функції для роботи з РНОКПП (Реєстраційний номер облікової картки платника податків).
 //
 // З моменту впровадження державного реєстру фізичних осіб України у 1994 році мав назву «індивідуальний ідентифікаційний номер».
 // З 2012 року набув чинності Податковий кодекс України, у якому використовується термін реєстраційний номер облікової картки платника податків (РНОКПП)
@@ -16,6 +16,7 @@ import (
 
 func init() {
 	var b [8]byte
+
 	_, err := cryptoRand.Read(b[:])
 	if err != nil {
 		panic("cannot seed math/rand package with cryptographically secure random number generator")
@@ -108,8 +109,9 @@ func GetGender(rnokpp string) (Gender, error) {
 var maleDigits = [5]int{1, 3, 5, 7, 9}
 var femaleDigits = [5]int{0, 2, 4, 6, 8}
 
-// GenerateRnokpp generates RNOKPP by date and gender
+// GenerateRnokpp generates valid RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
+	// @todo Validate that date is not less than 01.01.1900
 	diff := date.Sub(baseDate)
 	numberOfDays := int(diff.Hours() / 24)
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
@@ -146,19 +148,23 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string) {
 // 	return
 // }
 
-// parseRnokpp parses RNKOPP from string into array of ints
+// parseRnokpp parses RNKOPP from string into array of integers
 func parseRnokpp(rnokpp string) (result [10]int, err error) {
-	var empty [10]int
+	lengthRnokpp := len(rnokpp)
 
-	if len(rnokpp) > 10 {
-		return empty, fmt.Errorf("more than 10 digits")
+	if lengthRnokpp > 10 {
+		return result, fmt.Errorf("more than 10 digits, expects exactly 10 digits")
 	}
 
-	for i := 0; i < len(rnokpp); i++ {
+	if lengthRnokpp < 10 {
+		return result, fmt.Errorf("less than 10 digits, expects exactly 10 digits")
+	}
+
+	for i := 0; i < 10; i++ {
 		result[i], err = strconv.Atoi(string(rnokpp[i]))
 
 		if err != nil {
-			return empty, fmt.Errorf("string does not consist of digits")
+			return result, fmt.Errorf("string does not consist of digits")
 		}
 	}
 

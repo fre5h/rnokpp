@@ -7,10 +7,6 @@ import (
 	"github.com/fre5h/rnokpp"
 )
 
-const reset = "\033[0m"
-const red = "\033[31m"
-const green = "\033[32m"
-
 func TestNewDetails(t *testing.T) {
 	details := rnokpp.NewDetails(true, rnokpp.Male, "01.01.2000")
 	baseLocation, _ := time.LoadLocation("Europe/Kiev")
