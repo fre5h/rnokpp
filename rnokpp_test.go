@@ -140,10 +140,7 @@ func TestGenerateRnokpp(t *testing.T) {
 		generatedRnokpp, _ := rnokpp.GenerateRnokpp(birthday, rnokpp.Male)
 
 		if !rnokpp.IsValid(generatedRnokpp) {
-			t.Errorf(
-				"Generated RNOKPP is not valid %s\"%s\"%s",
-				red, generatedRnokpp, reset,
-			)
+			t.Errorf("Generated RNOKPP is not valid %s\"%s\"%s", red, generatedRnokpp, reset)
 		}
 	}
 }
