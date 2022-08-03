@@ -71,9 +71,9 @@ func main() {
 ###### bash
 
 ```text
-$ go get "github.com/fre5h/rnokpp"@v1.0.0
-go: downloading github.com/fre5h/rnokpp v1.0.0
-go: added github.com/fre5h/rnokpp v1.0.0
+$ go get "github.com/fre5h/rnokpp"@v0.1.0
+go: downloading github.com/fre5h/rnokpp v0.1.0
+go: added github.com/fre5h/rnokpp v0.1.0
 
 $ go run main.go
 details: valid, male, 01.01.2000
