@@ -1,6 +1,7 @@
 # RNOKPP (РНОКПП)
 
-Helper functions to work with Ukrainian registration number of the taxpayer's account card (РНОКПП).
+Helper functions to work with Ukrainian registration number of the taxpayer's account card (RNOKPP).  
+Допоміжні функції для роботи з реєстраційним номером облікової картки платника податків (РНОКПП).
 
 [![Build Status](https://img.shields.io/github/workflow/status/fre5h/rnokpp/CI/main?style=flat-square)](https://github.com/fre5h/rnokpp/actions?query=workflow%3ACI+branch%3Amain+)
 [![CodeCov](https://img.shields.io/codecov/c/github/fre5h/rnokpp.svg?style=flat-square)](https://codecov.io/github/fre5h/rnokpp)
