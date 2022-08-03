@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	var b [8]byte
+	var b [10]byte
 
 	_, err := cryptoRand.Read(b[:])
 	if err != nil {

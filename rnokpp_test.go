@@ -46,6 +46,30 @@ func TestGetDetails(t *testing.T) {
 	}
 }
 
+func TestGetDetailsWithErrors(t *testing.T) {
+	if _, err := rnokpp.GetDetails("1234567890+"); err == nil {
+		t.Error("Expected error for a string longer than 10 symbols")
+	}
+
+	if _, err := rnokpp.GetDetails("123456789"); err == nil {
+		t.Error("Expected error for a string smaller than 10 symbols")
+	}
+
+	var testVariantsForTestGetDetailsForNonDigitsInString = []string{
+		"123456789X",
+		"          ",
+		"ABCDEFGHIJ",
+		" 234567890",
+		"123456789 ",
+	}
+
+	for _, invalidRnokpp := range testVariantsForTestGetDetailsForNonDigitsInString {
+		if _, err := rnokpp.GetDetails(invalidRnokpp); err == nil {
+			t.Error("Expected error for non digits in string")
+		}
+	}
+}
+
 func TestIsMale(t *testing.T) {
 	var err error
 	var isMale bool
@@ -83,30 +107,6 @@ func TestIsFemale(t *testing.T) {
 	_, err = rnokpp.IsFemale("invalid") // invalid RNOKPP
 	if err == nil {
 		t.Error("Expected error for invalid RNOKPP")
-	}
-}
-
-func TestGetDetailsWithErrors(t *testing.T) {
-	if _, err := rnokpp.GetDetails("1234567890+"); err == nil {
-		t.Error("Expected error for a string longer than 10 symbols")
-	}
-
-	if _, err := rnokpp.GetDetails("123456789"); err == nil {
-		t.Error("Expected error for a string smaller than 10 symbols")
-	}
-
-	var testVariantsForTestGetDetailsForNonDigitsInString = []string{
-		"123456789X",
-		"          ",
-		"ABCDEFGHIJ",
-		" 234567890",
-		"123456789 ",
-	}
-
-	for _, invalidRnokpp := range testVariantsForTestGetDetailsForNonDigitsInString {
-		if _, err := rnokpp.GetDetails(invalidRnokpp); err == nil {
-			t.Error("Expected error for non digits in string")
-		}
 	}
 }
 
