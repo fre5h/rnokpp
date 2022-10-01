@@ -12,6 +12,8 @@ import (
 	mathRand "math/rand"
 	"strconv"
 	"time"
+
+	"github.com/fre5h/rnokpp/internal"
 )
 
 var maleDigits = [5]int{1, 3, 5, 7, 9}
@@ -60,7 +62,7 @@ func GetDetails(rnokpp string) (*Details, error) {
 	details := Details{
 		Valid:    true,
 		Gender:   gender,
-		Birthday: BaseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
+		Birthday: internal.BaseDate.AddDate(0, 0, numberOfDaysSinceBaseDate),
 	}
 
 	return &details, nil
@@ -99,7 +101,7 @@ func IsFemale(rnokpp string) (bool, error) {
 	return details.Gender.IsFemale(), nil
 }
 
-// GetGender gets gender from RNOKPP
+// GetGender gets a gender from RNOKPP
 func GetGender(rnokpp string) (*Gender, error) {
 	details, err := GetDetails(rnokpp)
 
@@ -110,9 +112,9 @@ func GetGender(rnokpp string) (*Gender, error) {
 	return &details.Gender, nil
 }
 
-// GenerateRnokpp generates valid RNOKPP by date and gender
+// GenerateRnokpp generates a valid RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
-	if date.Before(BaseDate) {
+	if date.Before(internal.BaseDate) {
 		err = fmt.Errorf("the allowed dates start from 01.01.1900, but your date is %s", date.Format("02.04.2006"))
 
 		return
@@ -124,7 +126,7 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 		return
 	}
 
-	diff := date.Sub(BaseDate)
+	diff := date.Sub(internal.BaseDate)
 	numberOfDays := int(diff.Hours() / 24)
 	numberOfDays--
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
@@ -150,16 +152,30 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	return
 }
 
-// func RandomRnokpp() string {
-// }
-//
-// func RandomRnokppN(count int) (result []string) {
-// 	for i := 0; i < count; i++ {
-// 		result = append(result, RandomRnokpp())
-// 	}
-//
-// 	return
-// }
+// GenerateRandomRnokpp generates a random valid RNOKPP
+func GenerateRandomRnokpp() (rnokpp string, err error) {
+	return GenerateRnokpp(internal.GenerateRandomDate(), RandomGender())
+}
+
+// GenerateRandomRnokppN generates a number of random valid RNOKPP
+func GenerateRandomRnokppN(count int) ([]string, error) {
+	if count <= 0 {
+		return nil, fmt.Errorf("number of rnokpp should be greater than 0")
+	}
+
+	var result []string
+
+	for i := 0; i < count; i++ {
+		rnokpp, err := GenerateRandomRnokpp()
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, rnokpp)
+	}
+
+	return result, nil
+}
 
 // parseRnokpp parses RNOKPP from string into array of integers
 func parseRnokpp(rnokpp string) (result [10]int, err error) {

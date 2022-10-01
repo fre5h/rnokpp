@@ -145,6 +145,31 @@ func TestGenerateRnokpp(t *testing.T) {
 	}
 }
 
+func TestGenerateRandomRnokpp(t *testing.T) {
+	for i := 0; i < 100; i++ {
+		generatedRnokpp, _ := rnokpp.GenerateRandomRnokpp()
+
+		if !rnokpp.IsValid(generatedRnokpp) {
+			t.Errorf("Generated random RNOKPP is not valid %s\"%s\"%s", red, generatedRnokpp, reset)
+		}
+	}
+}
+
+func TestGenerateRandomRnokppN(t *testing.T) {
+	generatedRnokpps, _ := rnokpp.GenerateRandomRnokppN(100)
+
+	for _, generatedRnokpp := range generatedRnokpps {
+		if !rnokpp.IsValid(generatedRnokpp) {
+			t.Errorf("Generated random RNOKPP is not valid %s\"%s\"%s", red, generatedRnokpp, reset)
+		}
+	}
+
+	_, err := rnokpp.GenerateRandomRnokppN(0)
+	if err == nil {
+		t.Errorf("Generation of RNOKPPs with non positiv number should not be possible")
+	}
+}
+
 func ExampleIsValid() {
 	fmt.Print(rnokpp.IsValid("3652504575"), rnokpp.IsValid("1234567890"))
 
@@ -218,6 +243,30 @@ func ExampleGenerateRnokpp() {
 	}
 
 	// Output:
+	// true
+	// true
+}
+
+func ExampleGenerateRandomRnokpp() {
+	if generatedRnokpp, err := rnokpp.GenerateRandomRnokpp(); err == nil {
+		fmt.Println(rnokpp.IsValid(generatedRnokpp))
+	}
+
+	// Output:
+	// true
+}
+
+func ExampleGenerateRandomRnokppN() {
+	if generatedRnokpps, err := rnokpp.GenerateRandomRnokppN(5); err == nil {
+		for _, generatedRnokpp := range generatedRnokpps {
+			fmt.Println(rnokpp.IsValid(generatedRnokpp))
+		}
+	}
+
+	// Output:
+	// true
+	// true
+	// true
 	// true
 	// true
 }

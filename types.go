@@ -2,7 +2,10 @@ package rnokpp
 
 import (
 	"fmt"
+	mathRand "math/rand"
 	"time"
+
+	"github.com/fre5h/rnokpp/internal"
 )
 
 // Gender is a string type representing a gender (male/female)
@@ -26,10 +29,14 @@ func (g Gender) String() string {
 	return string(g)
 }
 
-const BaseYear = 1900
-
-var BaseLocation, _ = time.LoadLocation("Europe/Kiev")
-var BaseDate = time.Date(1900, 1, 1, 0, 0, 0, 0, BaseLocation)
+// RandomGender returns random gender
+func RandomGender() Gender {
+	if mathRand.Intn(1) == 0 {
+		return Female
+	} else {
+		return Male
+	}
+}
 
 // Details is a struct representing details of RNOKPP
 type Details struct {
@@ -40,7 +47,7 @@ type Details struct {
 
 // NewDetails creates Details, and returns the pointer to it.
 func NewDetails(valid bool, gender Gender, date string) *Details {
-	birthday, err := time.ParseInLocation("02.01.2006", date, BaseLocation)
+	birthday, err := time.ParseInLocation("02.01.2006", date, internal.BaseLocation)
 	if err != nil {
 		panic(err)
 	}

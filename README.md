@@ -22,7 +22,7 @@ Helper functions to work with Ukrainian registration number of the taxpayer's ac
 - [x] Check gender
 - [x] Check validity
 - [x] Generate RNOKPP by date and gender
-- [ ] Generate random RNOKPP
+- [x] Generate random RNOKPP
 
 ## Using 👨‍🎓
 
@@ -66,6 +66,10 @@ func main() {
     fmt.Println("valid RNOKPP for male with birthday on 01.01.2000:", generatedRnokppMale) // valid RNOKPP for male with birthday on 01.01.2000, e.g. 3652322032
     generatedRnokppFemale, _ := rnokpp.GenerateRnokpp(birthday, rnokpp.Female)
     fmt.Println("valid RNOKPP for female with birthday on 01.01.2000:", generatedRnokppFemale) // valid RNOKPP for female with birthday on 01.01.2000, e.g. 3652347000
+
+	// Generate a random RNOKPP
+	generatedRandomRnokpp, _ := rnokpp.GenerateRandomRnokpp()
+	fmt.Println("random rnokpp:", generatedRandomRnokpp)
 }
 ```
 
