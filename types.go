@@ -14,19 +14,19 @@ type Gender string
 const Male = Gender("male")
 const Female = Gender("female")
 
-// IsMale checks if gender is male
-func (g Gender) IsMale() bool {
-	return g == Male
-}
-
-// IsFemale checks if gender is female
-func (g Gender) IsFemale() bool {
-	return g == Female
-}
-
 // String returns string representation of gender
 func (g Gender) String() string {
 	return string(g)
+}
+
+// isMale checks if gender is male
+func (g Gender) isMale() bool {
+	return g == Male
+}
+
+// isFemale checks if gender is female
+func (g Gender) isFemale() bool {
+	return g == Female
 }
 
 // RandomGender returns random gender
@@ -45,6 +45,15 @@ type Details struct {
 	Birthday time.Time
 }
 
+// String returns string representation of RNOKPP details
+func (d Details) String() string {
+	if !d.Valid {
+		return "invalid"
+	}
+
+	return fmt.Sprintf("valid, %s, %s", d.Gender, d.Birthday.Format("02.01.2006"))
+}
+
 // NewDetails creates Details, and returns the pointer to it.
 func NewDetails(valid bool, gender Gender, date string) *Details {
 	birthday, err := time.ParseInLocation("02.01.2006", date, internal.BaseLocation)
@@ -53,13 +62,4 @@ func NewDetails(valid bool, gender Gender, date string) *Details {
 	}
 
 	return &Details{valid, gender, birthday}
-}
-
-// String returns string representation of RNOKPP details
-func (d Details) String() string {
-	if !d.Valid {
-		return "invalid"
-	}
-
-	return fmt.Sprintf("valid, %s, %s", d.Gender, d.Birthday.Format("02.01.2006"))
 }

@@ -87,7 +87,7 @@ func IsMale(rnokpp string) (bool, error) {
 		return false, err
 	}
 
-	return details.Gender.IsMale(), nil
+	return details.Gender.isMale(), nil
 }
 
 // IsFemale checks if RNOKPP belongs to the female gender
@@ -98,7 +98,7 @@ func IsFemale(rnokpp string) (bool, error) {
 		return false, err
 	}
 
-	return details.Gender.IsFemale(), nil
+	return details.Gender.isFemale(), nil
 }
 
 // GetGender gets a gender from RNOKPP
