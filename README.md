@@ -70,11 +70,11 @@ func main() {
     // Generate a one random RNOKPP
     generatedRandomRnokpp, _ := rnokpp.GenerateRandomRnokpp()
     fmt.Println("random rnokpp:", generatedRandomRnokpp) // e.g. random rnokpp: 3300507061
-	// Or generate some number of random RNOKPP
-	generatedRandomRnokpps, _ := rnokpp.GenerateRandomRnokppN(3)
-	for i, generatedRandomRnokpp := range generatedRandomRnokpps {
-		fmt.Printf("random rnokpp #%d: %s\n", i, generatedRandomRnokpp)
-	}
+    // Or generate some number of random RNOKPPs
+    generatedRandomRnokpps, _ := rnokpp.GenerateRandomRnokppN(3)
+    for i, generatedRandomRnokpp := range generatedRandomRnokpps {
+        fmt.Printf("random rnokpp #%d: %s\n", i, generatedRandomRnokpp)
+    }
 }
 ```
 
