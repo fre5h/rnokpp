@@ -19,13 +19,13 @@ func (g Gender) String() string {
 	return string(g)
 }
 
-// isMale checks if gender is male
-func (g Gender) isMale() bool {
+// IsMale checks if gender is male
+func (g Gender) IsMale() bool {
 	return g == Male
 }
 
-// isFemale checks if gender is female
-func (g Gender) isFemale() bool {
+// IsFemale checks if gender is female
+func (g Gender) IsFemale() bool {
 	return g == Female
 }
 
