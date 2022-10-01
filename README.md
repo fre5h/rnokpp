@@ -67,9 +67,14 @@ func main() {
     generatedRnokppFemale, _ := rnokpp.GenerateRnokpp(birthday, rnokpp.Female)
     fmt.Println("valid RNOKPP for female with birthday on 01.01.2000:", generatedRnokppFemale) // valid RNOKPP for female with birthday on 01.01.2000, e.g. 3652347000
 
-    // Generate a random RNOKPP
+    // Generate a one random RNOKPP
     generatedRandomRnokpp, _ := rnokpp.GenerateRandomRnokpp()
     fmt.Println("random rnokpp:", generatedRandomRnokpp) // e.g. random rnokpp: 3300507061
+	// Or generate some number of random RNOKPP
+	generatedRandomRnokpps, _ := rnokpp.GenerateRandomRnokppN(3)
+	for i, generatedRandomRnokpp := range generatedRandomRnokpps {
+		fmt.Printf("random rnokpp #%d: %s\n", i, generatedRandomRnokpp)
+	}
 }
 ```
 
@@ -90,6 +95,9 @@ rnokpp valid: true false
 valid RNOKPP for male with birthday on 01.01.2000: 3652322032
 valid RNOKPP for female with birthday on 01.01.2000: 3652347000
 random rnokpp: 3300507061
+random rnokpp #0: 3946436021
+random rnokpp #1: 2642527503
+random rnokpp #2: 2620337525
 ```
 
 ## Contributing 🤝
