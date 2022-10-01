@@ -26,8 +26,10 @@ func (g Gender) String() string {
 	return string(g)
 }
 
-var baseLocation, _ = time.LoadLocation("Europe/Kiev")
-var BaseDate = time.Date(1900, 1, 1, 0, 0, 0, 0, baseLocation)
+const BaseYear = 1900
+
+var BaseLocation, _ = time.LoadLocation("Europe/Kiev")
+var BaseDate = time.Date(1900, 1, 1, 0, 0, 0, 0, BaseLocation)
 
 // Details is a struct representing details of RNOKPP
 type Details struct {
@@ -38,7 +40,7 @@ type Details struct {
 
 // NewDetails creates Details, and returns the pointer to it.
 func NewDetails(valid bool, gender Gender, date string) *Details {
-	birthday, err := time.ParseInLocation("02.01.2006", date, baseLocation)
+	birthday, err := time.ParseInLocation("02.01.2006", date, BaseLocation)
 	if err != nil {
 		panic(err)
 	}
