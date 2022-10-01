@@ -54,7 +54,7 @@ func (d Details) String() string {
 	return fmt.Sprintf("valid, %s, %s", d.Gender, d.Birthday.Format("02.01.2006"))
 }
 
-// NewDetails creates Details, and returns the pointer to it.
+// NewDetails creates Details, and returns the pointer to it
 func NewDetails(valid bool, gender Gender, date string) *Details {
 	birthday, err := time.ParseInLocation("02.01.2006", date, internal.BaseLocation)
 	if err != nil {
