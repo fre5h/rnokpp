@@ -14,6 +14,9 @@ import (
 	"time"
 )
 
+var maleDigits = [5]int{1, 3, 5, 7, 9}
+var femaleDigits = [5]int{0, 2, 4, 6, 8}
+
 func init() {
 	var b [10]byte
 
@@ -107,9 +110,6 @@ func GetGender(rnokpp string) (*Gender, error) {
 	return &details.Gender, nil
 }
 
-var maleDigits = [5]int{1, 3, 5, 7, 9}
-var femaleDigits = [5]int{0, 2, 4, 6, 8}
-
 // GenerateRnokpp generates valid RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	if date.Before(BaseDate) {
@@ -119,7 +119,7 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	}
 
 	if date.After(time.Now()) {
-		err = fmt.Errorf("it is allowed to use only dates in past or current date, but your date is %s", date.Format("02.04.2006"))
+		err = fmt.Errorf("it is allowed to use only dates in past or current date, but your date is in the future %s", date.Format("02.04.2006"))
 
 		return
 	}
@@ -161,16 +161,16 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 // 	return
 // }
 
-// parseRnokpp parses RNKOPP from string into array of integers
+// parseRnokpp parses RNOKPP from string into array of integers
 func parseRnokpp(rnokpp string) (result [10]int, err error) {
 	lengthRnokpp := len(rnokpp)
 
 	if lengthRnokpp > 10 {
-		return result, fmt.Errorf("more than 10 digits, expects exactly 10 digits")
+		return result, fmt.Errorf("more than 10 symbols, expects exactly 10 symbols")
 	}
 
 	if lengthRnokpp < 10 {
-		return result, fmt.Errorf("less than 10 digits, expects exactly 10 digits")
+		return result, fmt.Errorf("less than 10 symbols, expects exactly 10 symbols")
 	}
 
 	for i := 0; i < 10; i++ {

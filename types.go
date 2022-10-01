@@ -46,7 +46,7 @@ func NewDetails(valid bool, gender Gender, date string) *Details {
 	return &Details{valid, gender, birthday}
 }
 
-// String returns string representation of RNKOPP details
+// String returns string representation of RNOKPP details
 func (d Details) String() string {
 	if !d.Valid {
 		return "invalid"

@@ -89,4 +89,4 @@ valid RNOKPP for female with birthday on 01.01.2000: 3652347000
 
 ## Contributing 🤝
 
-See [CONTRIBUTING](https://github.com/fre5h/rnkopp/blob/master/.github/CONTRIBUTING.md) file.
+See [CONTRIBUTING](https://github.com/fre5h/rnokpp/blob/master/.github/CONTRIBUTING.md) file.
