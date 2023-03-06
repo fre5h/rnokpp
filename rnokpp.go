@@ -7,9 +7,7 @@ package rnokpp
 
 import (
 	cryptoRand "crypto/rand"
-	"encoding/binary"
 	"fmt"
-	mathRand "math/rand"
 	"strconv"
 	"time"
 
@@ -26,8 +24,6 @@ func init() {
 	if err != nil {
 		panic("cannot seed math/rand package with cryptographically secure random number generator")
 	}
-
-	mathRand.Seed(int64(binary.LittleEndian.Uint64(b[:])))
 }
 
 // GetDetails returns details about RNOKPP if possible
@@ -48,12 +44,9 @@ func GetDetails(rnokpp string) (*Details, error) {
 		return nil, fmt.Errorf("invalid")
 	}
 
-	var gender Gender
-
+	var gender = Male
 	if genderDigit%2 == 0 {
 		gender = Female
-	} else {
-		gender = Male
 	}
 
 	numberOfDaysSinceBaseDate := pRnokpp[0]*10000 + pRnokpp[1]*1000 + pRnokpp[2]*100 + pRnokpp[3]*10 + pRnokpp[4]*1
@@ -132,14 +125,14 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
 
 	// three random account number digits
-	rnokpp += strconv.Itoa(mathRand.Intn(9))
-	rnokpp += strconv.Itoa(mathRand.Intn(9))
-	rnokpp += strconv.Itoa(mathRand.Intn(9))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
 
 	if gender == Male {
-		rnokpp += strconv.Itoa(maleDigits[mathRand.Intn(4)])
+		rnokpp += strconv.Itoa(maleDigits[internal.Rand.Intn(4)])
 	} else {
-		rnokpp += strconv.Itoa(femaleDigits[mathRand.Intn(4)])
+		rnokpp += strconv.Itoa(femaleDigits[internal.Rand.Intn(4)])
 	}
 
 	var digits [9]int
@@ -190,9 +183,7 @@ func parseRnokpp(rnokpp string) (result [10]int, err error) {
 	}
 
 	for i := 0; i < 10; i++ {
-		result[i], err = strconv.Atoi(string(rnokpp[i]))
-
-		if err != nil {
+		if result[i], err = strconv.Atoi(string(rnokpp[i])); err != nil {
 			return result, fmt.Errorf("string does not consist of digits")
 		}
 	}

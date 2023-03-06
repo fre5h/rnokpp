@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var Rand *mathRand.Rand
+
 func init() {
 	var b [10]byte
 
@@ -16,7 +18,7 @@ func init() {
 		panic("cannot seed math/rand package with cryptographically secure random number generator")
 	}
 
-	mathRand.Seed(int64(binary.LittleEndian.Uint64(b[:])))
+	Rand = mathRand.New(mathRand.NewSource(int64(binary.LittleEndian.Uint64(b[:]))))
 }
 
 // GenerateRandomDate generates random datetime in the interval [01.01.1900..current time]
@@ -24,18 +26,18 @@ func GenerateRandomDate() time.Time {
 	var now = time.Now().In(BaseLocation)
 	var randomMonth, randomDay int
 
-	randomYear := mathRand.Intn(now.Year()-BaseYear+1) + BaseYear
+	randomYear := Rand.Intn(now.Year()-BaseYear+1) + BaseYear
 
 	if randomYear == now.Year() {
-		randomMonth = mathRand.Intn(int(now.Month())) + 1
+		randomMonth = Rand.Intn(int(now.Month())) + 1
 	} else {
-		randomMonth = mathRand.Intn(11) + 1
+		randomMonth = Rand.Intn(11) + 1
 	}
 
 	if randomMonth == int(now.Month()) {
-		randomDay = mathRand.Intn(now.Day()) + 1
+		randomDay = Rand.Intn(now.Day()) + 1
 	} else {
-		randomDay = mathRand.Intn(getNumberOfDaysInMonth(randomYear, time.Month(randomMonth))) + 1
+		randomDay = Rand.Intn(getNumberOfDaysInMonth(randomYear, time.Month(randomMonth))) + 1
 	}
 
 	return time.Date(randomYear, time.Month(randomMonth), randomDay, 0, 0, 0, 0, BaseLocation)

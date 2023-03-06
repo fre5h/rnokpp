@@ -111,14 +111,15 @@ func TestIsFemale(t *testing.T) {
 }
 
 func TestGetGender(t *testing.T) {
-	result1, _ := rnokpp.GetGender("3652504575")
-	fmt.Println(result1)
+	if gender, _ := rnokpp.GetGender("3652504575"); *gender != rnokpp.Male {
+		t.Error("Expected gender Male for RNOKPP 3652504575")
+	}
 
-	result2, _ := rnokpp.GetGender("3068208400")
-	fmt.Println(result2)
+	if gender, _ := rnokpp.GetGender("3068208400"); *gender != rnokpp.Female {
+		t.Error("Expected gender Female for RNOKPP 3068208400")
+	}
 
-	result3, err := rnokpp.GetGender("invalid")
-	if result3 != nil || err == nil {
+	if gender, err := rnokpp.GetGender("invalid"); gender != nil || err == nil {
 		t.Error("Expected error invalid RNOKPP")
 	}
 }

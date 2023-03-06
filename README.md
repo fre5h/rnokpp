@@ -3,7 +3,7 @@
 Helper functions to work with Ukrainian registration number of the taxpayer's account card (RNOKPP).  
 Допоміжні функції для роботи з реєстраційним номером облікової картки платника податків (РНОКПП).
 
-[![Build Status](https://img.shields.io/github/workflow/status/fre5h/rnokpp/CI/main?style=flat-square)](https://github.com/fre5h/rnokpp/actions?query=workflow%3ACI+branch%3Amain+)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/fre5h/rnokpp/ci.yml?branch=main&style=flat-square)](https://github.com/fre5h/rnokpp/actions?query=workflow%3ACI+branch%3Amain+)
 [![CodeCov](https://img.shields.io/codecov/c/github/fre5h/rnokpp.svg?style=flat-square)](https://codecov.io/github/fre5h/rnokpp)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fre5h/rnokpp?style=flat-square)](https://goreportcard.com/report/github.com/fre5h/rnokpp)
 [![License](https://img.shields.io/github/license/fre5h/rnokpp?style=flat-square)](https://pkg.go.dev/github.com/fre5h/rnokpp)
@@ -13,7 +13,7 @@ Helper functions to work with Ukrainian registration number of the taxpayer's ac
 
 ## Requirements 🧐
 
-* GO >= 1.18
+* GO >= 1.20
 
 ## Features 🎁
 

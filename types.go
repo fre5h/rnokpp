@@ -33,9 +33,9 @@ func (g Gender) IsFemale() bool {
 func RandomGender() Gender {
 	if mathRand.Intn(1) == 0 {
 		return Female
-	} else {
-		return Male
 	}
+
+	return Male
 }
 
 // Details is a struct representing details of RNOKPP
