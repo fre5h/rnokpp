@@ -125,14 +125,14 @@ func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	rnokpp = fmt.Sprintf("%05d", numberOfDays)
 
 	// three random account number digits
-	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
-	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
-	rnokpp += strconv.Itoa(internal.Rand.Intn(9))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(10))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(10))
+	rnokpp += strconv.Itoa(internal.Rand.Intn(10))
 
 	if gender == Male {
-		rnokpp += strconv.Itoa(maleDigits[internal.Rand.Intn(4)])
+		rnokpp += strconv.Itoa(maleDigits[internal.Rand.Intn(5)])
 	} else {
-		rnokpp += strconv.Itoa(femaleDigits[internal.Rand.Intn(4)])
+		rnokpp += strconv.Itoa(femaleDigits[internal.Rand.Intn(5)])
 	}
 
 	var digits [9]int

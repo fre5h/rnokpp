@@ -31,7 +31,7 @@ func (g Gender) IsFemale() bool {
 
 // RandomGender returns random gender
 func RandomGender() Gender {
-	if mathRand.Intn(1) == 0 {
+	if mathRand.Intn(2) == 0 {
 		return Female
 	}
 
