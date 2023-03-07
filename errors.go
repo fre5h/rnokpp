@@ -13,17 +13,17 @@ var ErrLessThan10Digits = errors.New("less than 10 symbols, expects exactly 10 s
 var ErrStringDoesNotConsistOfDigits = errors.New("string does not consist of digits")
 
 type ErrNotAllowedDate struct {
-	date time.Time
+	Date time.Time
 }
 
 func (e *ErrNotAllowedDate) Error() string {
-	return fmt.Sprintf("the allowed dates start from 01.01.1900, but your date %s is earlier", e.date.Format("02.04.2006"))
+	return fmt.Sprintf("the allowed dates start from 01.01.1900, but your date %s is earlier", e.Date.Format("02.04.2006"))
 }
 
 type ErrDateInFuture struct {
-	date time.Time
+	Date time.Time
 }
 
 func (e *ErrDateInFuture) Error() string {
-	return fmt.Sprintf("it is allowed to use only dates in past or current date, but your date is in the future %s", e.date.Format("02.04.2006"))
+	return fmt.Sprintf("it is allowed to use only dates in past or current date, but your date is in the future %s", e.Date.Format("02.04.2006"))
 }

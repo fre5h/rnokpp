@@ -108,13 +108,13 @@ func GetGender(rnokpp string) (*Gender, error) {
 // GenerateRnokpp generates a valid RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	if date.Before(internal.BaseDate) {
-		err = &ErrNotAllowedDate{date: date}
+		err = &ErrNotAllowedDate{Date: date}
 
 		return
 	}
 
 	if date.After(time.Now()) {
-		err = &ErrDateInFuture{date: date}
+		err = &ErrDateInFuture{Date: date}
 
 		return
 	}
