@@ -41,7 +41,7 @@ func GetDetails(rnokpp string) (*Details, error) {
 	calculatedControlDigit := calculateControlDigit(digits)
 
 	if controlDigit != calculatedControlDigit {
-		return nil, fmt.Errorf("invalid")
+		return nil, ErrInvalidControlDigit
 	}
 
 	var gender = Male
@@ -108,13 +108,13 @@ func GetGender(rnokpp string) (*Gender, error) {
 // GenerateRnokpp generates a valid RNOKPP by date and gender
 func GenerateRnokpp(date time.Time, gender Gender) (rnokpp string, err error) {
 	if date.Before(internal.BaseDate) {
-		err = fmt.Errorf("the allowed dates start from 01.01.1900, but your date is %s", date.Format("02.04.2006"))
+		err = &ErrNotAllowedDate{date: date}
 
 		return
 	}
 
 	if date.After(time.Now()) {
-		err = fmt.Errorf("it is allowed to use only dates in past or current date, but your date is in the future %s", date.Format("02.04.2006"))
+		err = &ErrDateInFuture{date: date}
 
 		return
 	}
@@ -153,7 +153,7 @@ func GenerateRandomRnokpp() (rnokpp string, err error) {
 // GenerateRandomRnokppN generates a number of random valid RNOKPP
 func GenerateRandomRnokppN(count int) ([]string, error) {
 	if count <= 0 {
-		return nil, fmt.Errorf("number of rnokpp should be greater than 0")
+		return nil, ErrNumberGreaterThanZero
 	}
 
 	var result []string
@@ -175,16 +175,16 @@ func parseRnokpp(rnokpp string) (result [10]int, err error) {
 	lengthRnokpp := len(rnokpp)
 
 	if lengthRnokpp > 10 {
-		return result, fmt.Errorf("more than 10 symbols, expects exactly 10 symbols")
+		return result, ErrMoreThan10Digits
 	}
 
 	if lengthRnokpp < 10 {
-		return result, fmt.Errorf("less than 10 symbols, expects exactly 10 symbols")
+		return result, ErrLessThan10Digits
 	}
 
 	for i := 0; i < 10; i++ {
 		if result[i], err = strconv.Atoi(string(rnokpp[i])); err != nil {
-			return result, fmt.Errorf("string does not consist of digits")
+			return result, ErrStringDoesNotConsistOfDigits
 		}
 	}
 
