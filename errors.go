@@ -9,7 +9,7 @@ import (
 var ErrInvalidControlDigit = errors.New("invalid control digit")
 var ErrNumberGreaterThanZero = errors.New("number of rnokpp should be greater than 0")
 var ErrMoreThan10Digits = errors.New("more than 10 digits, expects exactly 10 digits")
-var ErrLessThan10Digits = errors.New("less than 10 symbols, expects exactly 10 symbols")
+var ErrLessThan10Digits = errors.New("less than 10 digits, expects exactly 10 digits")
 var ErrStringDoesNotConsistOfDigits = errors.New("string does not consist of digits")
 
 type ErrNotAllowedDate struct {
