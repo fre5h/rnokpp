@@ -125,7 +125,7 @@ func TestGetGender(t *testing.T) {
 }
 
 func TestGenerateRnokpp(t *testing.T) {
-	oldDate, _ := time.Parse("02.04.2006", "31.12.1899")
+	oldDate, _ := time.Parse("02.01.2006", "31.12.1899")
 	if _, err := rnokpp.GenerateRnokpp(oldDate, rnokpp.Male); err == nil {
 		t.Error("Expected error for too old date")
 	}

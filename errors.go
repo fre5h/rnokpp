@@ -17,7 +17,7 @@ type ErrNotAllowedDate struct {
 }
 
 func (e *ErrNotAllowedDate) Error() string {
-	return fmt.Sprintf("the allowed dates start from 01.01.1900, but your date %s is earlier", e.Date.Format("02.04.2006"))
+	return fmt.Sprintf("the allowed dates start from 01.01.1900, but your date %s is earlier", e.Date.Format("02.01.2006"))
 }
 
 type ErrDateInFuture struct {
@@ -25,5 +25,5 @@ type ErrDateInFuture struct {
 }
 
 func (e *ErrDateInFuture) Error() string {
-	return fmt.Sprintf("it is allowed to use only dates in past or current date, but your date is in the future %s", e.Date.Format("02.04.2006"))
+	return fmt.Sprintf("it is allowed to use only dates in past or current date, but your date is in the future %s", e.Date.Format("02.01.2006"))
 }

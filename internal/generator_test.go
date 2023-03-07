@@ -14,7 +14,7 @@ func TestGenerateRandomDate(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		date := internal.GenerateRandomDate()
 		if date.Before(internal.BaseDate) || date.After(time.Now()) {
-			t.Errorf("Invalid generated date %s\"%s\"%s", red, date.Format("02.04.2006"), reset)
+			t.Errorf("Invalid generated date %s\"%s\"%s", red, date.Format("02.01.2006"), reset)
 		}
 	}
 }
