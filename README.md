@@ -10,6 +10,9 @@ Helper functions to work with Ukrainian registration number of the taxpayer's ac
 [![Gitter](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg?style=flat-square)](https://gitter.im/fre5h/rnokpp)
 [![GoDoc](https://pkg.go.dev/badge/github.com/fre5h/rnokpp)](https://pkg.go.dev/github.com/fre5h/rnokpp)
 
+## Demo ⚙️
+
+You can test it with my [RNOKPP Telegram Bot](https://t.me/rnokpp_bot).
 
 ## Requirements 🧐
 
